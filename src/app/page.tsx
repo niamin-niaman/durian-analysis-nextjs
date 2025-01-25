@@ -1,8 +1,10 @@
 "use client"
 
 import { useState, useRef } from "react"
+import { useRouter } from "next/navigation"
 
 export default function Home() {
+  const router = useRouter()
   const [isRecording, setIsRecording] = useState(false)
   const [hasRecording, setHasRecording] = useState(false)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
@@ -62,6 +64,10 @@ export default function Home() {
     }
   }
 
+  const handleAnalyze = () => {
+    router.push("/result")
+  }
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
       <div className="w-full max-w-md flex flex-col items-center space-y-8 p-8 rounded-lg border border-gray-200">
@@ -104,6 +110,7 @@ export default function Home() {
 
               {/* Analyze Button */}
               <button 
+                onClick={handleAnalyze}
                 className="w-full py-3 px-6 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
               >
                 Analyze
