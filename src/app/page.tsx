@@ -1,4 +1,67 @@
+"use client"
+
+import { useState, useRef } from "react"
+
 export default function Home() {
+  const [isRecording, setIsRecording] = useState(false)
+  const [hasRecording, setHasRecording] = useState(false)
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const audioChunksRef = useRef<Blob[]>([])
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      audioChunksRef.current = []
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data)
+        }
+      }
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" })
+        const url = URL.createObjectURL(audioBlob)
+        setAudioUrl(url)
+        setHasRecording(true)
+        setIsRecording(false)
+      }
+
+      mediaRecorder.start()
+      setIsRecording(true)
+      setHasRecording(false)
+    } catch (error) {
+      console.error("Error accessing microphone:", error)
+      alert("ไม่สามารถเข้าถึงไมโครโฟนได้ กรุณาอนุญาตการใช้งานไมโครโฟน")
+    }
+  }
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop()
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop())
+    }
+  }
+
+  const playRecording = () => {
+    if (audioUrl) {
+      const audio = new Audio(audioUrl)
+      audio.play()
+    }
+  }
+
+  const handleRecordClick = () => {
+    if (isRecording) {
+      stopRecording()
+    } else {
+      startRecording()
+    }
+  }
+
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
       <div className="w-full max-w-md flex flex-col items-center space-y-8 p-8 rounded-lg border border-gray-200">
@@ -7,7 +70,9 @@ export default function Home() {
           {[...Array(7)].map((_, i) => (
             <div
               key={i}
-              className="w-1.5 bg-gray-800"
+              className={`w-1.5 bg-gray-800 transition-all duration-500 ${
+                isRecording ? "animate-pulse" : ""
+              }`}
               style={{
                 height: `${Math.sin((i + 1) * 0.8) * 20 + 25}px`
               }}
@@ -15,13 +80,42 @@ export default function Home() {
           ))}
         </div>
         
-        {/* Record Button */}
-        <button 
-          className="w-full py-3 px-6 text-gray-800 border-2 border-gray-800 rounded hover:bg-gray-50 transition-colors disabled:opacity-50"
-          disabled
-        >
-          record
-        </button>
+        {/* Button Group */}
+        <div className="w-full space-y-4">
+          {/* Record/Re-record Button */}
+          <button 
+            onClick={handleRecordClick}
+            className={`w-full py-3 px-6 text-gray-800 border-2 border-gray-800 rounded hover:bg-gray-50 transition-colors
+              ${isRecording ? "bg-red-50 border-red-500 text-red-500" : ""}`}
+          >
+            {isRecording ? "Stop" : hasRecording ? "Re-record" : "Record"}
+          </button>
+
+          {/* Conditional Buttons - Only show if there's a recording */}
+          {hasRecording && (
+            <>
+              {/* Play Button */}
+              <button 
+                onClick={playRecording}
+                className="w-full py-3 px-6 text-gray-800 border-2 border-gray-800 rounded hover:bg-gray-50 transition-colors"
+              >
+                Play
+              </button>
+
+              {/* Analyze Button */}
+              <button 
+                className="w-full py-3 px-6 bg-gray-800 text-white rounded hover:bg-gray-700 transition-colors"
+              >
+                Analyze
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Recording Status */}
+        {isRecording && (
+          <p className="text-red-500 animate-pulse">Recording...</p>
+        )}
       </div>
     </main>
   )
