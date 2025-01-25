@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ระบบตรวจสอบความสุกของทุเรียนด้วยเสียง
 
-## Getting Started
+ระบบนี้ถูกพัฒนาขึ้นเพื่อช่วยในการตรวจสอบความสุกของทุเรียนโดยใช้การวิเคราะห์เสียงเคาะ โดยแบ่งการทำงานเป็น 3 ส่วนหลัก
 
-First, run the development server:
+## โครงสร้างระบบ
 
+### 1. ระบบรับเสียง (Frontend)
+- พัฒนาด้วย Next.js
+- รองรับการอัดเสียงผ่าน Web Audio API
+- ส่งไฟล์เสียงไปยังระบบประมวลผลผ่าน REST API
+
+### 2. ระบบประมวลผลเสียง (Backend)
+- แยกส่วนการทำงานจาก Frontend
+- วิเคราะห์ความแตกต่างระหว่างเสียงทุเรียนสุกและดิบ
+- ส่งผลลัพธ์กลับมายัง Frontend
+
+### 3. ระบบรายงานผล (Frontend)
+- แสดงผลการวิเคราะห์แบบ Real-time
+- แสดงสถานะการประมวลผล
+- รายงานผลลัพธ์ว่าเป็นทุเรียนสุกหรือดิบ
+
+## การติดตั้ง
+
+### ความต้องการของระบบ
+- Node.js 18.0 หรือสูงกว่า
+- npm หรือ yarn
+
+### ขั้นตอนการติดตั้ง Frontend
 ```bash
+# Clone repository
+git clone [repository-url]
+
+# ติดตั้ง dependencies
+npm install
+
+# รัน development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+## Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- NextJS
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## การใช้งาน
+1. เปิดเว็บบราวเซอร์และไปที่ `http://localhost:3000`
+2. กดปุ่มอัดเสียงเพื่อเริ่มบันทึกเสียงเคาะทุเรียน
+3. กดหยุดเมื่อเสร็จสิ้นการบันทึก
+4. ระบบจะประมวลผลและแสดงผลลัพธ์โดยอัตโนมัติ
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## สภาพแวดล้อมที่รองรับ
+- Google Chrome (แนะนำ)
+- Firefox
+- Safari
+- Edge
 
-## Learn More
+## การพัฒนาเพิ่มเติม
+- Frontend: `/src`
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## ติดต่อ
+หากมีคำถามหรือข้อเสนอแนะ กรุณาติดต่อ [your-email@example.com]
