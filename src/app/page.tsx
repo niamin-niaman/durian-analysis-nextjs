@@ -71,6 +71,14 @@ export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
       <div className="w-full max-w-md flex flex-col items-center space-y-8 p-8 rounded-lg border border-gray-200">
+        {/* Header Text */}
+        <div className="text-center space-y-2">
+          <h1 className="text-2xl font-semibold text-gray-800">วิเคราะห์ความสุกของทุเรียนด้วยเสียง</h1>
+          <p className="text-gray-600">
+            {hasRecording ? "กด re-record เพื่อบันทึกใหม่" : "กดปุ่ม Record เพื่อบันทึกเสียงเคาะ"}
+          </p>
+        </div>
+
         {/* Waveform Icon */}
         <div className="flex items-center space-x-1">
           {[...Array(7)].map((_, i) => (
@@ -97,9 +105,10 @@ export default function Home() {
             {isRecording ? "Stop" : hasRecording ? "Re-record" : "Record"}
           </button>
 
-          {/* Conditional Buttons - Only show if there's a recording */}
+          {/* Conditional Content - Only show if there's a recording */}
           {hasRecording && (
             <>
+              <p className="text-gray-600 text-center">เสียงถูกบันทึกแล้ว กด Analyze เพื่อวิเคราะห์</p>
               {/* Play Button */}
               <button 
                 onClick={playRecording}
